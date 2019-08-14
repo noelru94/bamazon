@@ -7,33 +7,29 @@ const connection = mysql.createConnection({
     database: 'bamazon'
 });
 
-showItems();
+bamazon();
 
 // when user runs the app a table will appear with 
-//items and its info 'id#,product name, and price'
-function showItems(){
+//items and its info 'id#,product name,and price'
+function bamazon(){
     
     connection.connect(function(err){
         if(err) throw err;
-        console.log(`Connection id: ${connection.threadId}\n-------------------------` );
-
+        
         connection.query('SELECT item_id,product_name,price FROM products',function(err,res){
             if(err) throw err;
             console.log('Welcome to Bamazon\n-------------------------');
             console.table(res);
-            promptUser();
-        })
-
-        connection.end();
-        
+            promptUserForPurchase();
+        })        
     })
 }
 
-//
-function promptUser(){
+
+function promptUserForPurchase(){
     inquirer.prompt([
         {
-            message: 'Choose an ID of the product you would like to buy',
+            message: 'Choose an ID number of the product you would like to buy',
             name: 'id'
         },
         {
@@ -41,11 +37,37 @@ function promptUser(){
             name: 'units'
         }
     ]).then(function(answers){
-        console.log(answers.id,answers.units);
+        checkInventory(answers.id,answers.units);
     })
 }
 
+// 
+function checkInventory(id,numOfUnitsUserWants){
+  
+        console.log(`Connection id: ${connection.threadId}`);
 
-function checkInventory(id,units){
-    connection
+        connection.query('SELECT stock_quantity FROM products WHERE item_id=?',[id],function(err,res){
+            if(err) throw err;
+            var itemQuantity = res[0].stock_quantity;
+            
+            if(itemQuantity > numOfUnitsUserWants){
+                
+                placeOrder(itemQuantity,numOfUnitsUserWants);
+
+            }else if(itemQuantity < units || itemQuantity === 0){
+                console.log('we dont have enough');
+            }
+        })
+
+        connection.end();
+}
+
+
+function placeOrder(numDatabase,numUserWants){
+    connection.query('UPDATE products SET stock_quantity = ? WHERE item_id=?',[numDatabase-numUserWants,id],function(err,res){
+        if(err) throw err;
+        console.log('order placed');
+        console.log(`database updated items remaining`);
+    })
+
 }
