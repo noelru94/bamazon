@@ -15,7 +15,7 @@ function bamazon(){
     
     connection.connect(function(err){
         if(err) throw err;
-        
+
         connection.query('SELECT item_id,product_name,price FROM products',function(err,res){
             if(err) throw err;
             console.log('Welcome to Bamazon\n-------------------------');
@@ -44,30 +44,28 @@ function promptUserForPurchase(){
 // 
 function checkInventory(id,numOfUnitsUserWants){
   
-        console.log(`Connection id: ${connection.threadId}`);
+    console.log(`Connection id: ${connection.threadId}`);
 
-        connection.query('SELECT stock_quantity FROM products WHERE item_id=?',[id],function(err,res){
-            if(err) throw err;
-            var itemQuantity = res[0].stock_quantity;
+    connection.query('SELECT stock_quantity FROM products WHERE item_id=?',[id],function(err,res){
+        if(err) throw err;
+        var itemQuantity = res[0].stock_quantity;
             
-            if(itemQuantity > numOfUnitsUserWants){
+        if(itemQuantity > numOfUnitsUserWants){
                 
-                placeOrder(itemQuantity,numOfUnitsUserWants);
+            placeOrder(itemQuantity,numOfUnitsUserWants,id);
 
-            }else if(itemQuantity < units || itemQuantity === 0){
-                console.log('we dont have enough');
-            }
-        })
-
-        connection.end();
+        }else if(itemQuantity < units || itemQuantity === 0){
+            console.log('we dont have enough');
+        }
+    })      
 }
 
-
-function placeOrder(numDatabase,numUserWants){
+function placeOrder(numDatabase,numUserWants,id){
     connection.query('UPDATE products SET stock_quantity = ? WHERE item_id=?',[numDatabase-numUserWants,id],function(err,res){
         if(err) throw err;
         console.log('order placed');
-        console.log(`database updated items remaining`);
-    })
+        console.log(`database updated`);
 
+        connection.end();
+    })
 }
