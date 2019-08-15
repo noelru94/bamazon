@@ -45,7 +45,11 @@ function Manager(){
 }
 let viewProducts = ()=> {
     console.log('view products window');
-    
+    connection.query('SELECT item_id,product_name,price,stock_quantity From products',(err,data)=>{
+        if(err) throw err;
+
+        console.table(data);
+    })
     connection.end();
 }
 
