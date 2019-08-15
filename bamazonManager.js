@@ -7,46 +7,62 @@ const connection = mysql.createConnection({
     database: 'bamazon'
 });
 
-inquirer.prompt([
-    {
-        type: 'list',
-        message: 'Menu Options',
-        choices: ['View Products for Sale','View Low Inventory','Add to Inventory','Add New Product'],
-        name: 'manager'
-    }
-]).then((answer)=>{
+Manager();
 
-    switch(answer.manager){
-        case 'View Products for Sale':
-        viewProducts();
-        break;
+function Manager(){
+    connection.connect(function(err){
+        if(err) throw err;
+        console.log('connection id: ' + connection.threadId);
 
-        case 'View Low Inventory':
-        viewLowInventory();
-        break;
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: 'Menu Options',
+                choices: ['View Products for Sale','View Low Inventory','Add to Inventory','Add New Product'],
+                name: 'manager'
+            }
+        ]).then((answer)=>{
 
-        case 'Add to Inventory':
-        addToInventory();
-        break;
+            switch(answer.manager){
+                case 'View Products for Sale':
+                viewProducts();
+                break;
 
-        case 'Add New Product':
-        addNewProduct();
-        break;
-    }
-})
+                case 'View Low Inventory':
+                viewLowInventory();
+                break;
 
+                case 'Add to Inventory':
+                addToInventory();
+                break;
+
+                case 'Add New Product':
+                addNewProduct();
+                break;
+            }
+        })
+    })
+}
 let viewProducts = ()=> {
-console.log('view products window');
+    console.log('view products window');
+    
+    connection.end();
 }
 
 let viewLowInventory = ()=> {
-console.log('view low inventory window');
+    console.log('view low inventory window');
+
+    connection.end();
 }
 
 let addToInventory = ()=> {
-console.log('add to inventory');
+    console.log('add to inventory');
+
+    connection.end();
 }
 
 let addNewProduct = ()=> {
-console.log('add new product');
+    console.log('add new product');
+
+    connection.end();
 }
