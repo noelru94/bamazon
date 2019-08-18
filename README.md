@@ -35,6 +35,16 @@ Running this application will list a set of menu options:
     4. Total profit
    
    * If a supervisor selects `Create New Department`, the app will ask for the supervisor for info to create a new department.
+
+
+### Technologies
+
+* mySQL
+* Node.js
+* Javascript
+
+#### Author 
+<i>Noel Vega</i>
     
 
 
