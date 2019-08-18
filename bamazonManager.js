@@ -44,19 +44,16 @@ function ManagerPortal(){
     })
 }
 
-// watch connection.end
 let viewProducts = ()=> {
-    console.log('view products window');
     connection.query('SELECT item_id,product_name,price,stock_quantity From products',(err,data)=>{
         if(err) throw err;
-
+        
         console.table(data);
     })
     connection.end();
 }
 
 let viewLowInventory = ()=> {
-    console.log('view low inventory window');
     connection.query('SELECT item_id,product_name,price From products WHERE stock_quantity < ?',['5'],(err,data)=>{
         if(err) throw err;
 
@@ -66,7 +63,6 @@ let viewLowInventory = ()=> {
 }
 
 let addToInventory = ()=> {
-    console.log('add to inventory');
     connection.query('SELECT item_id,product_name,price,stock_quantity From products',(err,data)=>{
         if(err) throw err;
         console.table(data);
@@ -95,7 +91,6 @@ let addToInventory = ()=> {
 }
 
 let addNewProduct = ()=> {
-    console.log('add new product');
     connection.query('SELECT item_id,product_name,price,stock_quantity From products',(err,data)=>{
         if(err) throw err;
         console.table(data);
