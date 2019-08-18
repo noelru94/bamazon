@@ -9,7 +9,7 @@ With Bamazon you can keep track of inventory levels, product sales and profit ma
 ### bamazonCustomer.js
 
 The `bamazonCustomer` interface lets the customer look through a list of products and decide what they want to buy. 
-<a href="https://www.youtube.com/watch?v=ebbd6-KYQwc" target="_blank"> Demo Video </a>
+<a href="https://www.youtube.com/watch?v=ebbd6-KYQwc" target="_blank"> bamazonCustomer Demo Video </a>
 
 ### bamazonManager
 
@@ -22,6 +22,8 @@ The `bamazonManager` interface gives a manager of Bamazon 4 options to choose fr
   * If a manager selects `Add to Inventory`, your app should display a prompt that will let the manager "add more" of any item currently in the store.
 
   * If a manager selects `Add New Product`, it should allow the manager to add a completely new product to the store.
+
+  <a href="https://www.youtube.com/watch?v=qqNIDIaf7rc" target="_blank"> bamazonManager Demo Video </a>
 
 
 ### bamazonSupervisor

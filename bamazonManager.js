@@ -7,18 +7,48 @@ const connection = mysql.createConnection({
     database: 'bamazon'
 });
 
-ManagerPortal();
 
-function ManagerPortal(){
-    connection.connect((err)=>{
+connection.connect((err)=>{
+ManagerPortal();
+    function ManagerPortal(){
+   
+       
         if(err) throw err;
-        console.log('connection id: ' + connection.threadId);
+        inquirer.prompt([
+            {
+                type: 'input',
+                message: 'Username',
+                name: 'username',
+            },
+            {
+                type:'password',
+                message: 'Enter Password',
+                name: 'password',
+                mask: '*'
+            }
+        ]).then((answer)=>{
+            connection.query('SELECT password FROM managerLogins WHERE username=?',[answer.username],(err,data)=>{
+
+                if(answer.password === data[0].password){
+                    portal();  
+                }else{
+                    console.log('Wrong username or password');
+                    ManagerPortal();
+                }
+            })
+                
+        })
+    
+    }
+});
+
+let portal = ()=>{
 
         inquirer.prompt([
             {
                 type: 'list',
                 message: 'Menu Options',
-                choices: ['View Products for Sale','View Low Inventory','Add to Inventory','Add New Product'],
+                choices: ['View Products for Sale','View Low Inventory','Add to Inventory','Add New Product','Exit Portal'],
                 name: 'manager'
             }
         ]).then((answer)=>{
@@ -39,27 +69,35 @@ function ManagerPortal(){
                 case 'Add New Product':
                 addNewProduct();
                 break;
+
+                case 'Exit Portal':
+                exitPortal();
+                break;
             }
-        })
-    })
+        })  
 }
+
+let exitPortal = () =>{
+    connection.end();
+}
+
 
 let viewProducts = ()=> {
     connection.query('SELECT item_id,product_name,price,stock_quantity From products',(err,data)=>{
         if(err) throw err;
         
         console.table(data);
+        viewOptions();
     })
-    connection.end();
 }
 
 let viewLowInventory = ()=> {
-    connection.query('SELECT item_id,product_name,price From products WHERE stock_quantity < ?',['5'],(err,data)=>{
+    connection.query('SELECT item_id,product_name,price,stock_quantity From products WHERE stock_quantity < ?',['5'],(err,data)=>{
         if(err) throw err;
 
         console.table(data);
+        viewOptions();
     })
-    connection.end();
 }
 
 let addToInventory = ()=> {
@@ -84,7 +122,22 @@ let addToInventory = ()=> {
 
             connection.query('UPDATE products SET stock_quantity = ? WHERE item_id = ?',[newInventoryTotal,answer.itemId],(err,data)=>{
                 if(err) throw err;
-                connection.end();
+
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        choices: ['Continue adding more to inventory','Main Menu','Exit Portal'],
+                        name : 'options'
+                    }
+                ]).then((answer)=>{
+                    if(answer.options === 'Continue adding more to inventory'){
+                        addToInventory();
+                    }else if(answer.options === 'Main Menu'){
+                        portal();
+                    }else{
+                        exitPortal();
+                    }
+                })
             })
         })
     });
@@ -123,8 +176,40 @@ let addNewProduct = ()=> {
             connection.query('INSERT INTO products(item_id,product_name,department_name,price,stock_quantity)Values(?,?,?,?,?)',
             [answer.item_id,answer.product_name,answer.department,answer.price,answer.stock_quantity],(err)=>{
                 if(err) throw err;
-                connection.end();
+
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        choices: ['Continue adding more products to inventory','Main Menu','Exit Portal'],
+                        name : 'options'
+                    }
+                ]).then((answer)=>{
+                    if(answer.options === 'Continue adding more products to inventory'){
+                        addNewProduct();
+                    }else if(answer.options === 'Main Menu'){
+                        portal();
+                    }else{
+                        exitPortal();
+                    }
+                })
             })
         })
     })
-}
+};
+
+let viewOptions = ()=>{
+    inquirer.prompt([
+        {
+            type: 'list',
+            choices: ['Main Menu','Exit Portal'],
+            name: 'options'
+        }
+    ]).then((answer)=>{
+            if(answer.options === 'Main Menu'){
+                portal();
+            }
+            else{
+                exitPortal();
+            }
+    });
+};

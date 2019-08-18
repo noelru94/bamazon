@@ -10,7 +10,9 @@ let total = 0;
 
 WelcomeToBamazon();
 
+// Main
 function WelcomeToBamazon(){
+    // Displalys table
     connection.query('SELECT item_id,product_name,price FROM products',(err,res)=>{
         if(err) throw err;
         console.table(res);
@@ -38,14 +40,16 @@ function WelcomeToBamazon(){
                     ]).then((answers)=>{
 
                         connection.query('SELECT * FROM products WHERE item_id=?',[answers.itemId],(err,data)=>{
-                            let item = data[0].product_name;
+                            if(err) throw err;
+
+                            let itemName = data[0].product_name;
                             let itemId = data[0].item_id;
                             let numOfItems = answers.quantity;
 
                             inquirer.prompt([
                                 {
                                     type: 'list',
-                                    message: `Are you sure you want to add ${numOfItems} ${item}s to your cart?`,
+                                    message: `Are you sure you want to add ${numOfItems} ${itemName}s to your cart?`,
                                     choices: ['Yes','No'],
                                     name:'confirm'
                                 }
@@ -80,7 +84,7 @@ let checkInventory = (itemId,quantity)=>{
             addItemToCart(quantityInDatabase,quantity,res[0].item_id);
         
         // if we have items in the inventory we but not enough to fullfill the order the customer is asked 
-        // if they would like what left in the inventory
+        // if they would like whats left in the inventory to there cart
         }else if(quantityInDatabase < quantity && quantityInDatabase > 0){
             
             inquirer.prompt([
@@ -118,7 +122,6 @@ let addItemToCart = (quantityInDatabase,quantity,itemId)=>{
 }
 
 
-//prints cart total
 let cartTotal = (quantity,itemId)=>{
     connection.query('SELECT price FROM products WHERE item_id=?',[itemId],(err,res)=>{
         if(err) throw err;
