@@ -6,10 +6,10 @@ Amazon like storefront with mySQL database.
 With Bamazon you can keep track of inventory levels, product sales and profit margins.
 
 
-###bamazonCustomer.js
+### bamazonCustomer.js
 
 The `bamazonCustomer` interface lets the customer look through a list of products and decide what they want to buy. 
-<a href="https://www.youtube.com/watch?v=ebbd6-KYQwc" target="_blank"><img src="./readme_images/Screen Shot 2019-08-17 at 9.52.23 PM.png" width="240" height="180" border="10" /></a>
+<a href="https://www.youtube.com/watch?v=ebbd6-KYQwc" target="_blank"> Demo Video </a>
 
 ### bamazonManager
 
